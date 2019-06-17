@@ -6,7 +6,8 @@ import 'package:html/parser.dart';
 class Student {
   String examTime;
   String usn;
-  bool resultFound;
+  bool resultFound = false;
+  
   Map<String, String> headers = {};
   Map<String, String> quickResult;
   List<String> allResult;
@@ -51,6 +52,7 @@ class Student {
     print(examTime);
 
     List<Element> tables = document.querySelectorAll('table');
+    print(tables.length);
     if(tables.length < 2) 
       resultFound = false;
     else 
