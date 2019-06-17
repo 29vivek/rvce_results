@@ -72,7 +72,7 @@ class Student {
 
       orderOfAllResult = order.map((Element val) => val.text.trim()).toList();
       allResult = all.map((Element val) => val.text.trim()).toList().sublist(0, all.length-orderOfAllResult.length);
-      
+      // the last entry is the 'go back' button so we dont need that
       print(orderOfAllResult);
       print(allResult);
     }
