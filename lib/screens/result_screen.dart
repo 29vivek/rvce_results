@@ -44,7 +44,7 @@ class _ResultScreenState extends State<ResultScreen> {
     return <Widget> [
       ListTile(
         title: Text('Result Not Found!'),
-        subtitle: Text('Check your USN or try again later.'),
+        subtitle: Text('Check your USN/ Internet connection and try again later.'),
         isThreeLine: true,
     )];
   }
