@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rvce_results/screens/result_screen.dart';
 import 'package:rvce_results/utilities/constants.dart';
+import 'package:rvce_results/screens/history_screen.dart';
+
 class InputScreen extends StatelessWidget {
 
   @override
@@ -9,6 +11,18 @@ class InputScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text('RVCE Results'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.history),
+              onPressed: () {
+                Navigator.push(context, 
+                  MaterialPageRoute(
+                    builder: (context) => HistoryScreen(),
+                  )
+                );
+              },
+            )
+          ],
         ),
         resizeToAvoidBottomInset: false,
         body: Column(
@@ -40,6 +54,15 @@ class InputScreen extends StatelessWidget {
                 ),
               ),
             ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding:EdgeInsets.only(bottom: 8.0), 
+                  child: Text('Made with ❤️ by Vivek Kekuda'),
+                ),
+              ),
+            )
           ],
         ),
       ),

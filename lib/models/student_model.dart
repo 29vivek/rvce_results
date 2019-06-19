@@ -2,7 +2,7 @@ import 'package:rvce_results/utilities/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
-
+import 'package:rvce_results/resources/history_database.dart';
 class Student {
   String examTime;
   String usn;
@@ -10,22 +10,22 @@ class Student {
   bool _errorOccured = false;
 
 
-  Map<String, String> headers = {};
+  Map<String, String> _headers = {};
   Map<String, String> quickResult;
   List<String> allResult;
-  List<String> orderOfAllResult;
+  List<String> _orderOfAllResult;
 
   void _updateCookies(http.Response response) {
     String rawCookie = response.headers['set-cookie'];
     if(rawCookie != null) {
       int index = rawCookie.indexOf(';');
-      headers['cookie'] = index == -1 ? rawCookie :rawCookie.substring(0, index);
+      _headers['cookie'] = index == -1 ? rawCookie :rawCookie.substring(0, index);
     }
   }
 
   Future<int> _captchaResult() async {
-   try { 
-     http.Response response = await http.get(url, headers: headers);
+    try { 
+      http.Response response = await http.get(url, headers: _headers);
       print(response.statusCode);
       _updateCookies(response);
       
@@ -57,7 +57,7 @@ class Student {
     
     if(!_errorOccured) {
       Map<String, String> payload = {'usn': usn, 'captcha': '$captcha'};
-      http.Response response = await http.post(url, body: payload, headers: headers);
+      http.Response response = await http.post(url, body: payload, headers: _headers);
       // without headers, it returns a 302 response
       print(response.statusCode);
       
@@ -84,15 +84,25 @@ class Student {
         List<Element> order = tables[1].querySelector('thead').querySelectorAll('th');
         List<Element> all = tables[1].querySelector('tbody').querySelectorAll('td');
 
-        orderOfAllResult = order.map((Element val) => val.text.trim()).toList();
-        allResult = all.map((Element val) => val.text.trim()).toList().sublist(0, all.length-orderOfAllResult.length);
+        _orderOfAllResult = order.map((Element val) => val.text.trim()).toList();
+        allResult = all.map((Element val) => val.text.trim()).toList().sublist(0, all.length-_orderOfAllResult.length);
         // the last entry is the 'go back' button so we dont need that
-        print(orderOfAllResult);
+        print(_orderOfAllResult);
         print(allResult);
+
+        await HistoryDatabase.instance.insert(this);
+
       }
     }
     // if error has occured, then the resultFound is set to false by default, so it says result not found.
   }
 
-  
+  Map<String, dynamic> inFormatForDb() {
+    return <String, dynamic> {
+      HistoryDatabase.columnUsn : quickResult['USN'],
+      HistoryDatabase.columnName : quickResult['NAME'],
+      HistoryDatabase.columnSemester : int.tryParse(quickResult['SEMESTER']) ?? 0,
+      HistoryDatabase.columnSgpa : double.tryParse(quickResult['SGPA']) ?? 0.0,
+    };
+  }
 }
