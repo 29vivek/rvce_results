@@ -39,7 +39,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.red,
         child: Icon(Icons.delete_forever),
         onPressed: () async {
           setState(() {
@@ -91,7 +91,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       alignment: Alignment.centerRight, 
                       child: Padding(
                         padding: EdgeInsets.only(right: 16.0),
-                        child: Icon(Icons.delete)
+                        child: Icon(Icons.delete, color: Colors.black,),
                       )
                     ),
                   ),
