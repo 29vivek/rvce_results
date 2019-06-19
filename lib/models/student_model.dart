@@ -91,7 +91,6 @@ class Student {
         print(allResult);
 
         await HistoryDatabase.instance.insert(this);
-
       }
     }
     // if error has occured, then the resultFound is set to false by default, so it says result not found.

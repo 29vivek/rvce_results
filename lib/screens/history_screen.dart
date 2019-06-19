@@ -4,16 +4,39 @@ import 'package:rvce_results/resources/history_database.dart';
 class HistoryScreen extends StatefulWidget {
   @override
   State<HistoryScreen> createState() {
-    return HistoryScreenState();
+    return _HistoryScreenState();
   }
 }
 
-class HistoryScreenState extends State<HistoryScreen> {
+class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('History'),
+        actions: <Widget>[
+          // need context which has a parent scaffold widget
+          Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: Icon(Icons.info_outline),
+                onPressed: () {
+                  Scaffold.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Swipe left to delete individual cards'),
+                      action: SnackBarAction(
+                        label: 'Got it', 
+                        onPressed: () {
+                          Scaffold.of(context).hideCurrentSnackBar();
+                        },
+                      ),
+                    )
+                  );
+                },
+              );
+            }
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.redAccent,
@@ -51,11 +74,11 @@ class HistoryScreenState extends State<HistoryScreen> {
                           subtitle: Text(snapshot.data[id][HistoryDatabase.columnUsn]),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 16.0),
+                          padding: EdgeInsets.only(left: 16.0, right: 16.0),
                           child: Text('${HistoryDatabase.columnSemester}: ${snapshot.data[id][HistoryDatabase.columnSemester]}', style: TextStyle(letterSpacing: 2.0),),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 16.0, bottom: 16.0),
+                          padding: EdgeInsets.only(left: 16.0, bottom: 16.0, right: 16.0),
                           child: Text('${HistoryDatabase.columnSgpa}: ${snapshot.data[id][HistoryDatabase.columnSgpa]}', style: TextStyle(letterSpacing: 2.0),),
                         ),
                       ],
@@ -86,6 +109,13 @@ class HistoryScreenState extends State<HistoryScreen> {
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // HistoryDatabase.instance.closeDatabase();
+    // crashes once closed and accessed again
+    super.dispose();
   }
 
 }
